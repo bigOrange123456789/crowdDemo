@@ -943,14 +943,14 @@
 
 	function init( scene, renderer, camera ) {//TAG0000
 		var pmLoader = new MyPMLoader(
-				'/myModel/zhao1', //模型路径
+				'/myModel/dongshizhang5', //模型路径
 				[10],//LOD等级的数组
 				camera,//LOD需要判断到相机的距离
 				0,//有多个动画时,表示第0个动画//可以通过pmLoader.updateAnimation(i)来切换动画
 				0.2//动画播放速度//可以通过调整pmLoader.animationSpeed来调整速度
 		);//pmLoader = new myPMLoader('myModel/dongshizhang', LODNumber);//pmLoader = new THREE.PMLoader();//加载PM文件
 		var myModel=pmLoader.obj;
-		//scene.add(myModel);
+		scene.add(myModel);
 
 		/*myModel.rotation.set(0,-Math.PI/2,0);
 		myModel.scale.set(0.105,0.105,0.105);

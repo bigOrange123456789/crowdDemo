@@ -1,0 +1,21 @@
+//===================================
+// Border Transitions Variables/Arrays
+//===================================
+
+
+// properties array: [border color], [:hover border color]
+$borderproperties:(
+
+  //group 1
+        "-off" $btncolor transparent,
+        "-off2" $btncolor initial,
+        "-off3" $btncolor initial,
+        "-top" $btncolor initial,
+        "-right" $btncolor initial,
+        "-bottom" $btncolor initial,
+        "-left" $btncolor initial,
+);
+
+
+
+

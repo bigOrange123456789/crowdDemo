@@ -1,0 +1,37 @@
+//===================================
+// Variables
+//===================================
+
+@import 'variables';
+
+//===================================
+// Base style of the buttons
+//===================================
+
+@import 'base';
+
+//===================================
+// Fill Transitions
+//===================================
+
+
+@import 'transitions/fill/fill';  // Core fill transition styles (DON'T REMOVE)
+
+@import 'transitions/fill/set01'; // Fill Transitions Set 01 (option)
+@import 'transitions/fill/set02'; // Fill Transitions Set 02 (option)
+@import 'transitions/fill/set03'; // Fill Transitions Set 03 (option)
+@import 'transitions/fill/set04'; // Fill Transitions Set 04 (option)
+
+
+//===================================
+// Border Transitions
+//===================================
+
+@import 'transitions/border/border';  // Core border transition styles (DON'T REMOVE)
+
+@import 'transitions/border/set01';   // Border Transitions Set 01 (option)
+@import 'transitions/border/set02';   // Border Transitions Set 02 (option)
+@import 'transitions/border/set03';   // Border Transitions Set 03 (option)
+@import 'transitions/border/set04';   // Border Transitions Set 04 (option)
+@import 'transitions/border/set05';   // Border Transitions Set 05 (option)
+@import 'transitions/border/set06';   // Border Transitions Set 06 (option)

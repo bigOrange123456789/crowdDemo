@@ -5,6 +5,11 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 	<link type="text/css" rel="stylesheet" href="main.css">
+	<!--PM依赖开始-->
+	<script src="pmLib/MyPMLoader.js"></script>
+	<script src="pmLib/PMAnimLoader.js"></script>
+	<!--PM依赖完成-->
+
 
 	<script type="text/javascript" src="../lib/three.js"></script>
 	<script type="text/javascript" src="../lib/stats.js"></script>
@@ -13,6 +18,8 @@
 	<script src="../lib/DRACOLoader.js"></script>
 	<script src="../lib/GLTFLoader.js"></script>
 	<script src="../lib/MyOrbitControls.js"></script>
+
+
 
 </head>
 <body>
@@ -516,63 +523,6 @@
 
 	window.load = load;
 
-
-	// ref for lumens: http://www.power-sure.com/lumens.htm
-	/*
-	var bulbLuminousPowers = {
-		"110000 lm (1000W)": 110000,
-		"3500 lm (300W)": 3500,
-		"1700 lm (100W)": 1700,
-		"800 lm (60W)": 800,
-		"400 lm (40W)": 400,
-		"180 lm (25W)": 180,
-		"20 lm (4W)": 20,
-		"Off": 0
-	};
-	// ref for solar irradiances: https://en.wikipedia.org/wiki/Lux
-	var hemiLuminousIrradiances = {
-		"0.0001 lx (Moonless Night)": 0.0001,
-		"0.002 lx (Night Airglow)": 0.002,
-		"0.5 lx (Full Moon)": 0.5,
-		"3.4 lx (City Twilight)": 3.4,
-		"50 lx (Living Room)": 50,
-		"100 lx (Very Overcast)": 100,
-		"350 lx (Office Room)": 350,
-		"400 lx (Sunrise/Sunset)": 400,
-		"1000 lx (Overcast)": 1000,
-		"18000 lx (Daylight)": 18000,
-		"50000 lx (Direct Sun)": 50000
-	};
-	// var params = {
-	// 	shadows: true,
-	// 	exposure: 0.68,
-	// 	bulbPower: Object.keys( bulbLuminousPowers )[ 4 ],
-	// 	hemiIrradiance: Object.keys( hemiLuminousIrradiances )[ 0 ]
-	// };
-	var params = {
-		shadows: true,
-		exposure: 0.68,
-		bulbPower: Object.keys( bulbLuminousPowers )[ 4 ],
-		hemiIrradiance: Object.keys( hemiLuminousIrradiances )[ 0 ],
-		color1: '#ffffff',
-		color2: '#ffa000',
-		color3: '#000000',
-		colorBias: 0.8,
-		burnRate: 0.35,
-		diffuse: 1.33,
-		viscosity: 0.25,
-		expansion: - 0.25,
-		swirl: 50.0,
-		drag: 0.35,
-		airSpeed: 12.0,
-		windX: 0.0,
-		windY: 0.75,
-		speed: 500.0,
-		massConservation: false
-	};
-*/
-	//init();
-	//animate();
 	//////////////////////////////////////////////// 寻路 ////////////////////////////////////////////////
 
 	scene = new THREE.Scene();
@@ -685,7 +635,7 @@
 		// let intersects = ray.intersectPlane(groundPlane);
 		// var inputNum = parseInt(document.getElementById("number").value);
 		var inputNum = 50;
-		console.log("inputNum",inputNum);
+		//console.log("inputNum",inputNum);
 		if(manNum > 0.7*inputNum && !startrun)
 		{
 			let x=0;
@@ -991,7 +941,30 @@
 	//////////////////////////////////////////////// 寻路 ////////////////////////////////////////////////
 
 
-	function init( scene, renderer, camera ) {
+	function init( scene, renderer, camera ) {//TAG0000
+		var pmLoader = new MyPMLoader(
+				'/myModel/zhao1', //模型路径
+				[10],//LOD等级的数组
+				camera,//LOD需要判断到相机的距离
+				0,//有多个动画时,表示第0个动画//可以通过pmLoader.updateAnimation(i)来切换动画
+				0.2//动画播放速度//可以通过调整pmLoader.animationSpeed来调整速度
+		);//pmLoader = new myPMLoader('myModel/dongshizhang', LODNumber);//pmLoader = new THREE.PMLoader();//加载PM文件
+		var myModel=pmLoader.obj;
+		//scene.add(myModel);
+
+		/*myModel.rotation.set(0,-Math.PI/2,0);
+		myModel.scale.set(0.105,0.105,0.105);
+		myModel.position.set(19,0.9,-1.8);//x是前后，z是左右//rootObject.rotation.set();
+
+		var geo = new THREE.CubeGeometry(1,1,1);
+		var material1=new THREE.MeshBasicMaterial({color: 0x0000dd});
+		var mesh= new THREE.Mesh(geo, material1);
+		mesh.scale.set(100,100,100);
+	   scene.add(mesh);*/
+	   //console.log(mesh);
+	   //console.log(scene);
+
+
 		var bulbGeometry = new THREE.SphereBufferGeometry( 0.02, 16, 8 );
 		bulbLight = new THREE.PointLight( 0xffee88, 1, 100, 2 );
 		bulbMat = new THREE.MeshStandardMaterial( {
@@ -1220,11 +1193,11 @@
 			newfire.fireManager.controlSheet.z = firePosition.z;
 
 			scene.add(newfire.fireManager.target);
-			console.log(newfire.fireManager.target)
+			//console.log(newfire.fireManager.target)
 		};
 
 		fireInit();
-		console.log(newfire);
+		////console.log(newfire);
 
 //////////////////////////////////////////////// 火焰 ////////////////////////////////////////////////
 
@@ -1430,7 +1403,7 @@
 		var sum = 50;
 		var surplus = sum % 86;
 		sum = Math.floor(sum / 86);
-		console.log("Math.floor",sum);
+		////console.log("Math.floor",sum);
 		var v0 = 0.8;//Agent初始速度
 		var vmax = 1.6;//Agent最大速度
 		var fear = 0;//Agent恐慌度，0-1
@@ -1584,7 +1557,7 @@
 						skinnedMeshes[node.uuid] = node;
 					}
 				});
-				// console.log(skinnedMeshes);
+				// //console.log(skinnedMeshes);
 				const cloneBones = {};
 				const cloneSkinnedMeshes = {};
 				clone.scene.traverse((node) => {
@@ -1595,16 +1568,16 @@
 						cloneSkinnedMeshes[node.uuid] = node;
 					}
 				});
-				// console.log(cloneBones);
-				// console.log(cloneSkinnedMeshes);
+				// //console.log(cloneBones);
+				// //console.log(cloneSkinnedMeshes);
 				for (let uuid in cloneSkinnedMeshes) {
 					const cloneSkinnedMesh = cloneSkinnedMeshes[uuid];
-					// console.log(cloneSkinnedMeshes);
+					// //console.log(cloneSkinnedMeshes);
 					const skinnedMesh = skinnedMeshes[cloneSkinnedMesh._sourceMeshUuid];
 					if (skinnedMesh === null) {
 						continue;
 					}
-					// console.log(skinnedMesh);
+					// //console.log(skinnedMesh);
 					const skeleton = skinnedMesh.skeleton;
 					const orderedCloneBones = [];
 					for (let i = 0; i < skeleton.bones.length; ++i) {
@@ -1632,8 +1605,8 @@
 					temp = i % 31;
 					var newMesh, textureURL, textureURL1;
 					newMesh = cloneGltf(data[temp]);
-					console.log(newMesh);
-					console.log(i);
+					////console.log(newMesh);
+					////console.log(i);
 					manNum++;
 
 					//贴图参数化
@@ -1843,8 +1816,8 @@
 					temp = i % 39;
 					var newMesh, textureURL;
 					newMesh = cloneGltf(data[temp]);
-					console.log(newMesh);
-					console.log(i);
+					////console.log(newMesh);
+					////console.log(i);
 					manNum++;
 
 					//贴图参数化
@@ -2038,8 +2011,8 @@
 					temp = i % 2;
 					var newMesh, textureURL, textureURL1;
 					newMesh = cloneGltf(data[temp]);
-					console.log(newMesh);
-					console.log(i);
+					//(newMesh);
+					////console.log(i);
 					manNum++;
 
 					//贴图参数化
@@ -2133,8 +2106,8 @@
 					temp = i % 2;
 					var newMesh, textureURL;
 					newMesh = cloneGltf(data[temp]);
-					console.log(newMesh);
-					console.log(i);
+					////console.log(newMesh);
+					////console.log(i);
 					manNum++;
 
 					//贴图参数化
@@ -2217,8 +2190,8 @@
 					temp = i % 31;
 					var newMesh, textureURL, textureURL1;
 					newMesh = cloneGltf(data[temp]);
-					console.log(newMesh);
-					console.log(i);
+					////console.log(newMesh);
+					////console.log(i);
 					manNum++;
 
 					//贴图参数化
@@ -2429,8 +2402,8 @@
 					temp = i % 39;
 					var newMesh, textureURL;
 					newMesh = cloneGltf(data[temp]);
-					console.log(newMesh);
-					console.log(i);
+					//console.log(newMesh);
+					//console.log(i);
 					manNum++;
 
 					//贴图参数化
@@ -2625,8 +2598,8 @@
 					temp = i % 2;
 					var newMesh, textureURL;
 					newMesh = cloneGltf(data[temp]);
-					console.log(newMesh);
-					console.log(i);
+					//console.log(newMesh);
+					//console.log(i);
 					manNum++;
 
 					//贴图参数化
@@ -2704,8 +2677,8 @@
 					temp = i % 31;
 					var newMesh, textureURL, textureURL1;
 					newMesh = cloneGltf(data[temp]);
-					console.log(newMesh);
-					console.log(i);
+					//console.log(newMesh);
+					//console.log(i);
 					manNum++;
 
 					//贴图参数化
@@ -2916,8 +2889,8 @@
 					temp = i % 39;
 					var newMesh, textureURL;
 					newMesh = cloneGltf(data[temp]);
-					console.log(newMesh);
-					console.log(i);
+					//console.log(newMesh);
+					//console.log(i);
 					manNum++;
 
 					//贴图参数化
@@ -3112,8 +3085,8 @@
 					temp = i % 2;
 					var newMesh, textureURL;
 					newMesh = cloneGltf(data[temp]);
-					console.log(newMesh);
-					console.log(i);
+					//console.log(newMesh);
+					//console.log(i);
 					manNum++;
 
 					//贴图参数化
@@ -3214,8 +3187,8 @@
 					temp = i % 31;
 					var newMesh, textureURL, textureURL1;
 					newMesh = cloneGltf(data[temp]);
-					console.log(newMesh);
-					console.log(i);
+					//console.log(newMesh);
+					//console.log(i);
 					manNum++;
 
 					//贴图参数化
@@ -3425,8 +3398,8 @@
 					temp = i % 39;
 					var newMesh, textureURL;
 					newMesh = cloneGltf(data[temp]);
-					console.log(newMesh);
-					console.log(i);
+					//console.log(newMesh);
+					//console.log(i);
 					manNum++;
 
 					//贴图参数化
@@ -3621,8 +3594,8 @@
 					temp = i % 2;
 					var newMesh, textureURL, textureURL1;
 					newMesh = cloneGltf(data[temp]);
-					console.log(newMesh);
-					console.log(i);
+					//console.log(newMesh);
+					//console.log(i);
 					manNum++;
 
 					//贴图参数化
@@ -3717,8 +3690,8 @@
 					temp = i % 2;
 					var newMesh, textureURL;
 					newMesh = cloneGltf(data[temp]);
-					console.log(newMesh);
-					console.log(i);
+					//console.log(newMesh);
+					//console.log(i);
 					manNum++;
 
 					//贴图参数化

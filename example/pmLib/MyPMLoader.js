@@ -11,6 +11,8 @@ function MyPMLoader(url,LODArray,camera,animationType,animationSpeed){
     this.camera=null;
     this.skeletonBones=null;
     this.skeletonMatrix=null;
+    //this.scene=scene;//window中含有scene对象//appInst._renderScenePass.scene;//0000
+    //console.log(this.scene);
 
     this.updateMesh=function(i,skeletonBones,skeletonMatrix){//这个函数的作用是协助实现LOD//0 - pmMeshHistory-1
         if(this.preLODIndex===i||i>=this.pmMeshHistory.length||i<0){this.preLODIndex=i;return;}
@@ -62,7 +64,7 @@ function MyPMLoader(url,LODArray,camera,animationType,animationSpeed){
 
         //async function f(callback){return await callback(x,y);}
         var animLoader = new PMAnimLoader();//估计是通过gltf文件加载的动画
-        console.log(animLoader);
+        //console.log(animLoader);
         animLoader.load(url + '/gltf/scene.gltf', function (gltfScene)
             //animLoader.load(url + '/gltf/zhaotest.glb', function (gltfScene)
         {
@@ -461,50 +463,72 @@ function MyPMLoader(url,LODArray,camera,animationType,animationSpeed){
                 for(var key in mapPM)
                 {
                     restoreMesh(key,index,lengthindex);//从第二个JSON文件开始执行这个语句
-                    //console.log("6*",rootObject.position);//加载第二个JSON文件时才被执行
                 }
             }
-            //console.log("7*",rootObject.position);
         }
 
         //创建新的模型，将还原后的结果渲染到场景中
         function restoreMesh(Meshid,index,lengthindex)//Meshid始终为0
-        {
+        {//index:0-330   lengthindex:331
             var useSkinning = true;
-
-            //需要弄清楚mesh从对象中移除到更新后再次被添加到对象中之间进行了哪些处理，尤其是与骨骼动画相关的部分
-            //console.log(rootObject);
-
-            //console.log(1,rootObject.position);
             rootObject.remove(mesh[Meshid]);//将mesh从对象中移除//this is a tag 0000
 
             var pos=rootObject.position;
             var scale=rootObject.scale;
-            var geometry = new THREE.BufferGeometry();
-            updateGeometry(geometry , meshData,Meshid);//相关运算
+            var geometry=new THREE.BufferGeometry();
+            updateGeometry(geometry,meshData,Meshid);//相关运算
 
-            if (useSkinning == false) {//没有骨骼动画
-                mesh[Meshid] = new THREE.Mesh(geometry, meshMat[Meshid]);
-            } else {//有骨骼动画
-                mesh[Meshid] = new THREE.SkinnedMesh(geometry, meshMat[Meshid]);
-                meshMat[Meshid].skinning = true;
+            if(useSkinning==false){//没有骨骼动画
+                mesh[Meshid]=new THREE.Mesh(geometry,meshMat[Meshid]);
+            }else{//有骨骼动画
+                mesh[Meshid]=new THREE.SkinnedMesh(geometry,meshMat[Meshid]);
+                meshMat[Meshid].skinning=true;
             }//console.log(Meshid);输出了356次的0
-            //if(rootObject.children.length==0)
-            //console.log(2,rootObject.position);
+
             rootObject.add(mesh[Meshid]);//将新的mesh添加到对象中//
-            //console.log(3,rootObject.position);
+
             rootObject.position=pos;
             rootObject.scale=scale;
-            ////console.log(4,rootObject.position);
-
             setupPmSkinnedMesh(rootObject, skeletonBones, skeletonMatrix);//重要
 
             if(typeof(index)!='undefined')
                 if(index==lengthindex-1||index%Math.ceil(lengthindex/(numberLOD-1))==0)
                     pmMeshHistory.push(mesh[Meshid]);//记录mesh
+            /*if(index==0){//开启实例化渲染的代码后用于实例化的那个模型骨骼绑定出现了问题
+                var scene=this.scene;//window中含有scene对象
 
+                 geometry.computeVertexNormals();//计算顶点法线
+                 //console.log(geometry);
+                 geometry.scale( 0.5, 0.5, 0.5 );
+                 var material=new THREE.MeshNormalMaterial();
+                 var mesh2=new THREE.InstancedMesh( geometry, material,2);
+                 var dummy=new THREE.Object3D();
+                 dummy.position.set(5,-1,0);
+                 dummy.updateMatrix();//由位置计算齐次坐标变换矩阵
+                 mesh2.setMatrixAt(0, dummy.matrix);
+                dummy.position.set(-5,-1,0);
+                dummy.updateMatrix();
+                mesh2.setMatrixAt(1, dummy.matrix);
+                mesh2.instanceMatrix.needsUpdate = true;
+                scene.add(mesh2);
 
-            ////console.log(5,rootObject.position);
+                var loader = new THREE.BufferGeometryLoader();//BufferGeometry缓冲区几何结构
+                loader.load( './instancing/suzanne_buffergeometry.json', function ( geometry ) {
+                    geometry.computeVertexNormals();//计算顶点法线
+                    //console.log(geometry);
+                    geometry.scale( 0.5, 0.5, 0.5 );
+                    var material=new THREE.MeshNormalMaterial();
+                    var mesh=new THREE.InstancedMesh( geometry, material,2);
+                    var dummy=new THREE.Object3D();
+                    dummy.updateMatrix();//由位置计算齐次坐标变换矩阵
+                    mesh.setMatrixAt(0, dummy.matrix);
+                    dummy.position.set(0,1,0);
+                    dummy.updateMatrix();
+                    mesh.setMatrixAt(1, dummy.matrix);
+                    mesh.instanceMatrix.needsUpdate = true;
+                    scene.add(mesh);
+                } );
+            }*/
         }
 
         function updateGeometry(geometry, meshData, Meshid)
@@ -598,7 +622,7 @@ function MyPMLoader(url,LODArray,camera,animationType,animationSpeed){
                 {
                     //THIS.hadLoadAllMesh=true;
                     //开始测试
-                    /*document.onkeydown = function(e){
+                    document.onkeydown = function(e){
                         if (e.key == "N"||e.key == "n") {
                             console.log(THIS.rootObject,THIS.skeletonBones);
                             var i=prompt("请输入1-"+(pmMeshHistory.length)+"的数字来切换LOD:",0);
@@ -609,10 +633,10 @@ function MyPMLoader(url,LODArray,camera,animationType,animationSpeed){
                             var i=prompt("请输入1-"+(THIS.rootObject.animations.length)+"的数字来切换动画:",0);
                             THIS.updateAnimation(i-1);
                         }
-                    }*/
+                    }
                     //完成测试//if (isPmLoading == false) restoreMesh();
                     function loopLODCheck(){
-                        //if(Math.random()<0.01)THIS.updateAnimation(Math.floor(Math.random()*4));
+                        if(Math.random()<0.01)THIS.updateAnimation(Math.floor(Math.random()*4));
                         requestAnimationFrame(loopLODCheck);
                         THIS.LODCheck(THIS.camera,THIS.skeletonBones,THIS.skeletonMatrix);
                     }loopLODCheck();/**/

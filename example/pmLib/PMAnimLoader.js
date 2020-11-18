@@ -2564,11 +2564,11 @@ function PMAnimLoader(manager) {
 
 					var skeleton = new THREE.Skeleton( bones, boneInverses );
 
-					console.log(mesh.matrixWorld);
+					//console.log(mesh.matrixWorld);
 					mesh.bind( skeleton, mesh.matrixWorld );
 
-                    console.log(mesh);
-                    console.log(skeleton);
+                    //console.log(mesh);
+                    //console.log(skeleton);
 
 				}
 

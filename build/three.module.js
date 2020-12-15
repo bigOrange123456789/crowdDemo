@@ -50933,7 +50933,7 @@ Object.assign( WebGLRenderer.prototype, {
 	},
 	getMaxAnisotropy: function () {
 
-		console.warn( 'THREE.WebGLRenderer: .getMaxAnisotropy() is now .capabilities.getMaxAnisotropy().' );
+		//console.warn( 'THREE.WebGLRenderer: .getMaxAnisotropy() is now .capabilities.getMaxAnisotropy().' );
 		return this.capabilities.getMaxAnisotropy();
 
 	},

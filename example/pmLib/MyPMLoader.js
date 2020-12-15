@@ -636,7 +636,7 @@ function MyPMLoader(url,LODArray,camera,animationType,animationSpeed){
                     }
                     //完成测试//if (isPmLoading == false) restoreMesh();
                     function loopLODCheck(){
-                        if(Math.random()<0.01)THIS.updateAnimation(Math.floor(Math.random()*4));
+                        //if(Math.random()<0.01)THIS.updateAnimation(Math.floor(Math.random()*4));
                         requestAnimationFrame(loopLODCheck);
                         THIS.LODCheck(THIS.camera,THIS.skeletonBones,THIS.skeletonMatrix);
                     }loopLODCheck();/**/

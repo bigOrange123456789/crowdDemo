@@ -2404,16 +2404,12 @@
 						cloneSkinnedMeshes[node.uuid] = node;
 					}
 				});
-				// console.log(cloneBones);
-				// console.log(cloneSkinnedMeshes);
 				for (let uuid in cloneSkinnedMeshes) {
 					const cloneSkinnedMesh = cloneSkinnedMeshes[uuid];
-					// console.log(cloneSkinnedMeshes);
 					const skinnedMesh = skinnedMeshes[cloneSkinnedMesh._sourceMeshUuid];
 					if (skinnedMesh === null) {
 						continue;
 					}
-					// console.log(skinnedMesh);
 					const skeleton = skinnedMesh.skeleton;
 					const orderedCloneBones = [];
 					for (let i = 0; i < skeleton.bones.length; ++i) {
@@ -2426,7 +2422,6 @@
 			};
 
 			var promiseAll = Promise.all(arr).then((data) => {
-
 				var temp, number;
 				if(surplus>=0&&surplus<=10){
 					number = sum * 10 + surplus;

@@ -5,12 +5,11 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 	<link type="text/css" rel="stylesheet" href="main.css">
-	<!--PM依赖开始-->
-	<script src="pmLib/MyPMLoader.js"></script>
-	<script src="pmLib/PMAnimLoader.js"></script>
-	<!--PM依赖完成-->
+	<!--新增依赖包-->
 	<script src="three.js"></script>
 	<script src="GLTFLoader.js"></script>
+	<!--新增依赖包-->
+
 
 
 	<script type="text/javascript" src="../lib/three.js"></script>
@@ -1234,62 +1233,19 @@
 				return new this.constructor(this.geometry, this.material).copy(this, recursive);
 			};
 
-			const cloneGltf = (gltf) => {
-				const clone = {
-					animations: gltf.animations,
-					scene: gltf.scene.clone(true)
-				};
-				const skinnedMeshes = {};
-				gltf.scene.traverse((node) => {
-					if (ForceGetProperty(node, "isSkinnedMesh")) {
-						skinnedMeshes[node.uuid] = node;
-					}
-				});
-				const cloneBones = {};
-				const cloneSkinnedMeshes = {};
-				clone.scene.traverse((node) => {
-					if (ForceGetProperty(node, "isBone")) {
-						cloneBones[node.name] = node;
-					}
-					if (ForceGetProperty(node, "isSkinnedMesh")) {
-						cloneSkinnedMeshes[node.uuid] = node;
-					}
-				});
-				for (let uuid in cloneSkinnedMeshes) {
-					const cloneSkinnedMesh = cloneSkinnedMeshes[uuid];
-					const skinnedMesh = skinnedMeshes[cloneSkinnedMesh._sourceMeshUuid];
-					if (skinnedMesh === null) {
-						continue;
-					}
-					const skeleton = skinnedMesh.skeleton;
-					const orderedCloneBones = [];
-					for (let i = 0; i < skeleton.bones.length; ++i) {
-						const cloneBone = cloneBones[skeleton.bones[i].name];
-						orderedCloneBones.push(cloneBone);
-					}
-					cloneSkinnedMesh.bind(new THREE.Skeleton(orderedCloneBones, skeleton.boneInverses), cloneSkinnedMesh.matrixWorld);
-				}
-				return clone;
-			};
-			Promise.all(arr).then((data) => {
-				console.log(data[0])
 
-			});
 			var loader= new GLTFLoader();
-			loader.load("../Model/avatar/female_run.glb", (glb) => {
-				console.log(glb);
-				var myGltf=glb;
-				var newMesh0={animations:myGltf.animations,scene:myGltf.scene};//cloneGltf(data[0]);
-				newMesh0.scene.scale.set(400, 400, 150);
-
-				var meshMixer2 = new THREE.AnimationMixer(newMesh0.scene);
-				meshMixer2.clipAction(newMesh0.animations[0]).play();
-				scene.add(newMesh0.scene);
-				console.log(newMesh0);
-				setInterval(function () {
-					meshMixer2.update(0.01);
-				},100)
-			});/**/
+			loader.load("../Model/avatar/female_bend.glb", (glb1) => {
+				loader.load("../Model/avatar/female_run.glb", (glb2) => {
+					glb1.scene.scale.set(500, 500, 500);
+					var meshMixer2 = new THREE.AnimationMixer(glb1.scene);
+					meshMixer2.clipAction(glb2.animations[0]).play();
+					scene.add(glb1.scene);
+					setInterval(function () {
+						meshMixer2.update(0.01);
+					},100)
+				});
+			});
 		}
 		loadBlendMeshWithPromise();
 
